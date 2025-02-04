@@ -48,13 +48,19 @@ tasks:
 
         echo "✅ Skaffold configuration generated in $OUTPUT_FILE"
   build:
+    silent: true
     cmds:
       - defer: rm -fr skaffold-auto.yaml
       - |
+        echo "🚀 Building images with Skaffold..."
         skaffold build -f skaffold-auto.yaml -q > build.json
+        echo "✅ Images built successfully"
   update: 
+    silent: true
     cmds:
+      - defer: rm -fr build.json
       - |
+        echo "🚀 Updating CWL files with the new images..."
         cwl=$( tomlq -r '.workflows."water-bodies".path' project.toml )
         i=0
         tomlq -r '.tools | keys[]' project.toml | while read -r tool; do
@@ -62,3 +68,4 @@ tasks:
             i=$((i+1))
             s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $cwl
         done
+        echo "✅ CWL workflow updated successfully"
