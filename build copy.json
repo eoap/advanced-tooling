@@ -1,0 +1,20 @@
+{
+    "builds": [
+        {
+            "imageName": "cr.terradue.com/earthquake-monitoring/crop",
+            "tag": "cr.terradue.com/earthquake-monitoring/crop:5199213@sha256:c7a033b85dc31c98d9762019463822c41d799c6a57f5eeddc810c53d5aab6ef2"
+        },
+        {
+            "imageName": "cr.terradue.com/earthquake-monitoring/norm_diff",
+            "tag": "cr.terradue.com/earthquake-monitoring/norm_diff:5199213@sha256:57a258b94df33540587dfcde6979bd8b954bd654cabc0f46c9f1a218594e1e4f"
+        },
+        {
+            "imageName": "cr.terradue.com/earthquake-monitoring/otsu",
+            "tag": "cr.terradue.com/earthquake-monitoring/otsu:5199213@sha256:7da9359b13f7c8c259d8b4500b13d089d9b4eba5da6a8b478f89c807b3e41488"
+        },
+        {
+            "imageName": "cr.terradue.com/earthquake-monitoring/stac",
+            "tag": "cr.terradue.com/earthquake-monitoring/stac:5199213@sha256:ad07961e1a9ca834a4d535cd61ed747183358cee6ff408e9d52115c848161b07"
+        }
+    ]
+}
