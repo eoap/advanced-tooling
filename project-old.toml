@@ -1,0 +1,19 @@
+[project]
+name = "my-cwl-project"
+version = "1.0.0"
+
+[tools.crop]
+context = "water-bodies/command-line-tools/crop"
+
+[tools.norm_diff]
+context = "water-bodies/command-line-tools/norm_diff"
+
+[tools.otsu]
+context = "water-bodies/command-line-tools/otsu"
+
+[tools.stac]
+context = "water-bodies/command-line-tools/stac"
+
+[workflows.water-bodies]
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl"
+uses = ["crop", "norm_diff", "otsu", "stac"]

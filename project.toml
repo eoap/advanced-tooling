@@ -1,0 +1,18 @@
+[project]
+name = "my-cwl-project"
+version = "1.0.0"
+
+[tools.crop]
+context = "command-line-tools/crop"
+
+[tools.norm_diff]
+context = "command-line-tools/norm_diff"
+
+[tools.otsu]
+context = "command-line-tools/otsu"
+
+[tools.stac]
+context = "command-line-tools/stac"
+
+[workflows.water-bodies]
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl"
