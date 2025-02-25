@@ -65,6 +65,7 @@ tasks:
         i=0
         tomlq -r '.tools | keys[]' project.toml | while read -r tool; do
             img=$( cat build.json | index=$i yq ".builds[env(index)].tag")
+            img=$( echo $img | sed -E 's/:[^@]+(@sha256:)/\1/' )
             i=$((i+1))
             s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $cwl
         done
