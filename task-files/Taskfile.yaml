@@ -53,12 +53,12 @@ tasks:
       - defer: rm -fr skaffold-auto.yaml
       - |
         echo "🚀 Building images with Skaffold..."
-        skaffold build -f skaffold-auto.yaml -v=error -q > build.json
+        skaffold build -f skaffold-auto.yaml -v=error -q > build.json 2>/dev/null
         echo "✅ Images built successfully"
   update: 
     silent: true
     cmds:
-      - defer: rm -fr build.json
+      #- defer: rm -fr build.json
       - |
         echo "🚀 Updating CWL files with the new images..."
         cwl=$( tomlq -r '.workflows."water-bodies".path' project.toml )
