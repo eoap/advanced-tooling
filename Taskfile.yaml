@@ -1,10 +1,13 @@
 version: '3'
 
 includes:
-  remote: https://github.com/fabricebrito/eoap-taskfile/raw/e7562ebc445695d8c0c1e7803bd138177a8287ae/task-files/Taskfile.yaml
+  remote: https://raw.githubusercontent.com/fabricebrito/eoap-taskfile/refs/heads/main/task-files/Taskfile.yaml
 
 tasks:
   all-in:
   - task: remote:prepare
   - task: remote:build
   - task: remote:update
+
+  prepare:
+  - task: remote:prepare
