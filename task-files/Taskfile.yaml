@@ -15,7 +15,7 @@ tasks:
         yq eval -n '
           .apiVersion = "skaffold/v4beta9" |
           .kind = "Config" |
-          .build.cluster.namespace = "iride-datalake" |
+          .build.cluster.namespace = "ns1" |
           .build.cluster.serviceAccount = "kaniko-sa" |
           .build.cluster.volumes = [{
             "name": "kaniko-secret",
