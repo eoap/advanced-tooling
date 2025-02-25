@@ -15,6 +15,7 @@ tasks:
         yq eval -n '
           .apiVersion = "skaffold/v4beta9" |
           .kind = "Config" |
+          .build.tagPolicy.sha256 = {} |
           .build.cluster.namespace = "eoap-advanced-tooling" |
           .build.cluster.serviceAccount = "kaniko-sa" |
           .build.cluster.volumes = [{
