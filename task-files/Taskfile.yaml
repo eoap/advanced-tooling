@@ -53,7 +53,7 @@ tasks:
       - defer: rm -fr skaffold-auto.yaml
       - |
         echo "🚀 Building images with Skaffold..."
-        skaffold build -f skaffold-auto.yaml -q > build.json
+        skaffold build -f skaffold-auto.yaml -v=error -q > build.json
         echo "✅ Images built successfully"
   update: 
     silent: true
