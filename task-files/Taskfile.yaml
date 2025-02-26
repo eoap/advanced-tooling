@@ -7,7 +7,7 @@ tasks:
       - |
         #!/bin/bash
         set -e
-
+        echo "🚀 Preparing skaffold build configuration"
         # Define output file
         OUTPUT_FILE="skaffold-auto.yaml"
 
@@ -50,6 +50,7 @@ tasks:
         # Extract tools from project.toml and append them dynamically
         tomlq -r '.tools | to_entries | .[] | "\(.key) \(.value.context)"' project.toml | while read -r tool tool_path; do
             t=$( generate_artifact "$tool" "$tool_path" )
+            echo "🔧 Adding build configuration for CommandLineTool $tool"
             coso=$t yq eval -P ".build.artifacts += env(coso)" -i "$OUTPUT_FILE"
         done
 
@@ -80,11 +81,13 @@ tasks:
             # check if .hints.DockerRequirement is not null
             result=$(s="${tool}" yq -r '.$graph[] | select(.id == env(s)) | .hints.DockerRequirement' "$path")
 
+            echo "🔧 Updating CommandLineTool ${tool} with image ${img}"
             if [ "$result" = "null" ]; then
                 s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).requirements.DockerRequirement.dockerPull = env(t)' -i $path
             else
                 s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $path
             fi
           done
+          echo "✅ CWL workflow $path updated successfully"
         done
-        echo "✅ CWL workflow updated successfully"
+        echo "✅ CWL workflows updated successfully"
