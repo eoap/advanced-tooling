@@ -4,6 +4,58 @@ version = "1.0.0"
 
 [tools.crop]
 context = "command-line-tools/crop"
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl#crop"
+
+[[tools.crop.tests]]
+name = "crop-test-1"
+description = "Test case 1 for crop tool."
+
+[tools.crop.tests.params]
+item = "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"
+aoi = "-121.399,39.834,-120.74,40.472"
+epsg = "EPSG:4326"
+band = "green"
+
+[tools.crop.tests.execution]
+volume = "/calrissian/crop-green"
+max_ram = "4G"
+max_cores = 8
+pod_serviceaccount = "calrissian-sa"
+
+[tools.crop.tests.execution.paths]
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+
+[[tools.crop.tests]]
+name = "crop-test-2"
+description = "Test case 2 for crop tool."
+
+[tools.crop.tests.params]
+item = "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"
+aoi = "-121.399,39.834,-120.74,40.472"
+epsg = "EPSG:4326"
+band = "nir"
+
+[tools.crop.tests.execution]
+volume = "/calrissian/crop-nir"
+max_ram = "4G"
+max_cores = 8
+pod_serviceaccount = "calrissian-sa"
+
+[tools.crop.tests.execution.paths]
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+
+
+
 
 [tools.norm_diff]
 context = "command-line-tools/norm_diff"
