@@ -25,6 +25,10 @@ You can debug the tasks with e.g.:
 task -t task-files/Taskfile.yaml -d . prepare build update
 ```
 
+```
+task -t task-files/Taskfile.yaml -d . test-tool VAR=crop
+```
+
 ## TODOs
 
 - add cwl workflow update of requirements - DONE
