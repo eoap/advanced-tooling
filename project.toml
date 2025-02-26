@@ -45,7 +45,6 @@ volume = "/calrissian"
 max_ram = "4G"
 max_cores = 8
 pod_serviceaccount = "calrissian-sa"
-params_file = "params.yml"
 
 [workflows.tests.execution.paths]
 stdout = "results.json"
