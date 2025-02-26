@@ -5,5 +5,7 @@ RUN pip install --no-cache-dir rasterio click loguru && \
 
 ADD app.py /app/app.py
 
+WORKDIR /app
+
 ENTRYPOINT []
 

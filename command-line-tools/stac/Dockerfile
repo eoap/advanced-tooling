@@ -5,4 +5,6 @@ RUN pip install --no-cache-dir pystac rio_stac loguru click && \
 
 ADD app.py /app/app.py
 
+WORKDIR /app
+
 ENTRYPOINT []

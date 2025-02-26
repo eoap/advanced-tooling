@@ -5,4 +5,6 @@ RUN pip install --no-cache-dir rasterio click pystac loguru pyproj shapely && \
 
 ADD app.py /app/app.py
 
+WORKDIR /app
+
 ENTRYPOINT []

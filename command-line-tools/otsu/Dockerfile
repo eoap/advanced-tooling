@@ -5,4 +5,6 @@ RUN pip install --no-cache-dir rasterio scikit-image click loguru && \
 
 ADD app.py /app/app.py
 
+WORKDIR /app
+
 ENTRYPOINT []

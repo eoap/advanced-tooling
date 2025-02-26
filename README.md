@@ -37,6 +37,7 @@ calrissian \
     --outdir /calrissian/results \
     --usage-report /calrissian/usage.json \
     --tool-logs-basepath /calrissian/logs \
+    --pod-serviceaccount calrissian-sa \
     cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies \
     params.yml
 ```
