@@ -70,13 +70,21 @@ tasks:
         echo "🚀 Updating CWL files with the new images..."
         for cwl in $(tomlq -r '.workflows[].path' project.toml); do
           path=$( echo $cwl | cut -d'#' -f1 )
+            echo "🔧 Updating $path"
           i=0
           tomlq -r '.tools | keys[]' project.toml | while read -r tool; do
             img=$( cat build.json | index=$i yq ".builds[env(index)].tag")
             img=$( echo $img | sed -E 's/:latest(@sha256:)/\1/' )
             i=$((i+1))
-            s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $path
-            s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).requirements.DockerRequirement.dockerPull = env(t)' -i $path
+            
+            # check if .hints.DockerRequirement is not null
+            result=$(s="${tool}" yq -r '.$graph[] | select(.id == env(s)) | .hints.DockerRequirement' "$path")
+
+            if [ "$result" = "null" ]; then
+                s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).requirements.DockerRequirement.dockerPull = env(t)' -i $path
+            else
+                s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $path
+            fi
           done
         done
         echo "✅ CWL workflow updated successfully"
