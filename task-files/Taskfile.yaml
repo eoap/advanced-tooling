@@ -132,7 +132,7 @@ tasks:
               --stderr ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) \
               --max-ram $(echo "$test_config" | jq -r .execution.max_ram) \
               --max-cores \"$(echo "$test_config" | jq -r .execution.max_cores)\" \
-              --tmp-outdir-prefix ${volume}/$(echo "$test_config" | jq -r .execution.paths.tmp_outdir_prefix) \
+              --tmp-outdir-prefix ${volume}/$(echo "$test_config" | jq -r .execution.paths.tmp_outdir_prefix)/ \
               --outdir ${volume}/$(echo "$test_config" | jq -r .execution.paths.outdir) \
               --usage-report ${volume}/$(echo "$test_config" | jq -r .execution.paths.usage_report) \
               --tool-logs-basepath ${volume}/$(echo "$test_config" | jq -r .execution.paths.tool_logs_basepath) \
