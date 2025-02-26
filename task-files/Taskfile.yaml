@@ -11,17 +11,23 @@ tasks:
         # Define output file
         OUTPUT_FILE="skaffold-auto.yaml"
 
+        # read the configuration file
+        namespace=$( tomlq -r '.build.cluster.namespace' project.toml )
+        service_account=$( tomlq -r '.build.cluster.serviceAccount' project.toml )
+        secret=$( tomlq -r '.build.container.secret' project.toml )
+        registry=$( tomlq -r '.build.container.registry' project.toml )
+
         # Create base YAML structure using yq
-        yq eval -n '
+        enamespace=$namespace eservice_account=$service_account esecret=$secret yq eval -n '
           .apiVersion = "skaffold/v4beta9" |
           .kind = "Config" |
           .build.tagPolicy.sha256 = {} |
-          .build.cluster.namespace = "eoap-advanced-tooling" |
-          .build.cluster.serviceAccount = "kaniko-sa" |
+          .build.cluster.namespace = env(enamespace) |
+          .build.cluster.serviceAccount = env(eservice_account) |
           .build.cluster.volumes = [{
-            "name": "kaniko-secret",
+            "name": env(esecret),
             "secret": {
-              "secretName": "kaniko-secret",
+              "secretName": env(esecret),
               "items": [{"key": ".dockerconfigjson", "path": "config.json"}]
             }
           }] |
@@ -33,10 +39,10 @@ tasks:
             local tool="$1"
             local tool_path="$2"
 
-            etool=$tool etool_path=$tool_path yq e -n '
-              .image = "cr.terradue.com/earthquake-monitoring/\(env(etool))" |
+            etool=$tool etool_path=$tool_path eregistry=$registry esecret=$secret yq e -n '
+              .image = "\(env(eregistry))/\(env(etool))" |
               .context = env(etool_path) |
-              .kaniko.volumeMounts = [{"name": "kaniko-secret", "mountPath": "kaniko/.docker"}]'
+              .kaniko.volumeMounts = [{"name": env(esecret), "mountPath": "kaniko/.docker"}]'
         }
 
         #generate_artifact "etool" "etoolpath"
@@ -63,13 +69,14 @@ tasks:
       - |
         echo "🚀 Updating CWL files with the new images..."
         for cwl in $(tomlq -r '.workflows[].path' project.toml); do
-        # cwl=$( tomlq -r '.workflows."water-bodies".path' project.toml )
+          path=$( echo $cwl | cut -d'#' -f1 )
           i=0
           tomlq -r '.tools | keys[]' project.toml | while read -r tool; do
             img=$( cat build.json | index=$i yq ".builds[env(index)].tag")
             img=$( echo $img | sed -E 's/:latest(@sha256:)/\1/' )
             i=$((i+1))
-            s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $cwl
+            s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $path
+            s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).requirements.DockerRequirement.dockerPull = env(t)' -i $path
           done
         done
         echo "✅ CWL workflow updated successfully"

@@ -14,5 +14,13 @@ context = "command-line-tools/otsu"
 [tools.stac]
 context = "command-line-tools/stac"
 
-[workflows.water-bodies]
-path = "cwl-workflow/app-water-bodies-cloud-native.cwl"
+[[workflows]]
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies"
+
+[build.cluster]
+namespace = "eoap-advanced-tooling"
+serviceAccount = "kaniko-sa"
+
+[build.container]
+registry = "cr.terradue.com/earthquake-monitoring"
+secret = "kaniko-secret"
