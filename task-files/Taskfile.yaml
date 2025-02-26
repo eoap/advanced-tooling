@@ -95,7 +95,9 @@ tasks:
         echo "✅ CWL workflows updated successfully"
 
   test:
+    silent: true
     cmds:
+      - defer: rm -f params.yaml
       - |
         #!/bin/bash
         set -e
