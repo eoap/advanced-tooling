@@ -11,3 +11,69 @@ tasks:
 
   prepare:
   - task: remote:prepare
+
+  test:
+    cmds:
+      - |
+        #!/bin/bash
+        set -e
+        echo "🚀 Running tests"
+        i=0
+        tomlq -c '.workflows[]' project.toml | while read -r workflow; do
+          path=$(tomlq -r ".workflows[$i].path" project.toml)
+          echo "Workflow Path: $path"
+          tests=$(tomlq -r ".workflows[$i].tests" project.toml)
+
+          if [ "$tests" != "null" ]; then
+            j=0
+            # iterate over the tests
+            tomlq -c ".workflows[$i].tests" project.toml | while read -r test; do
+              test_config=$(tomlq -r ".workflows[$i].tests[$j]" project.toml)
+
+              echo $test_config | jq -r .name
+
+              name=$(echo $test_config | jq -r .name)
+              description=$(echo $test_config | jq -r .description )
+              
+              echo "Test Name: $name"
+              echo "Description: $description"
+              echo "---------------------------"
+              # write params to a file
+              echo $test_config | jq -r .params > params.yaml
+
+              # create the calrissian command
+              # calrissian \
+              # --stdout /calrissian/results.json \
+              # --stderr /calrissian/app.log \
+              # --max-ram 4G \
+              # --max-cores "8" \
+              # --tmp-outdir-prefix /calrissian/tmp \
+              # --outdir /calrissian/results \
+              # --usage-report /calrissian/usage.json \
+              # --tool-logs-basepath /calrissian/logs \
+              # --pod-serviceaccount calrissian-sa \
+              # cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies \
+              # params.yml
+
+              volume=$( echo $test_config | jq -r .execution.volume)
+
+              cmd=$(printf "%s\n" "calrissian \
+              --stdout ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout) \
+              --stderr ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) \
+              --max-ram $(echo "$test_config" | jq -r .execution.max_ram) \
+              --max-cores \"$(echo "$test_config" | jq -r .execution.max_cores)\" \
+              --tmp-outdir-prefix ${volume}/$(echo "$test_config" | jq -r .execution.paths.tmp_outdir_prefix) \
+              --outdir ${volume}/$(echo "$test_config" | jq -r .execution.paths.outdir) \
+              --usage-report ${volume}/$(echo "$test_config" | jq -r .execution.paths.usage_report) \
+              --tool-logs-basepath ${volume}/$(echo "$test_config" | jq -r .execution.paths.tool_logs_basepath) \
+              --pod-serviceaccount $(echo "$test_config" | jq -r .execution.pod_serviceaccount) \          
+              ${path} \
+              params.yaml")
+              echo $cmd  
+              j=$((j+1))
+            done
+          fi
+
+          i=$((i+1))
+        done
+        echo "✅ Tests passed"

@@ -14,8 +14,7 @@ context = "command-line-tools/otsu"
 [tools.stac]
 context = "command-line-tools/stac"
 
-[[workflows]]
-path = "cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies"
+
 
 [build.cluster]
 namespace = "eoap-advanced-tooling"
@@ -24,3 +23,38 @@ serviceAccount = "kaniko-sa"
 [build.container]
 registry = "cr.terradue.com/earthquake-monitoring"
 secret = "kaniko-secret"
+
+[[workflows]]
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies"
+
+
+[[workflows.tests]]
+name = "water-detection-test-1"
+description = "Test case 1 for water bodies detection."
+
+[workflows.tests.params]
+stac_items = [
+    "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A",
+    "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2A_10TFK_20220524_0_L2A"
+]
+aoi = "-121.399,39.834,-120.74,40.472"
+epsg = "EPSG:4326"
+
+[workflows.tests.execution]
+volume = "/calrissian"
+max_ram = "4G"
+max_cores = 8
+pod_serviceaccount = "calrissian-sa"
+params_file = "params.yml"
+
+[workflows.tests.execution.paths]
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+
+
+[[workflows]]
+path = "cwl-workflow/app-water-body-cloud-native.cwl#water-bodies"

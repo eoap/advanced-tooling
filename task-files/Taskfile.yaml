@@ -81,10 +81,12 @@ tasks:
             # check if .hints.DockerRequirement is not null
             result=$(s="${tool}" yq -r '.$graph[] | select(.id == env(s)) | .hints.DockerRequirement' "$path")
 
-            echo "🔧 Updating CommandLineTool ${tool} with image ${img}"
+            
             if [ "$result" = "null" ]; then
+                echo "🔧 Updating CommandLineTool ${tool} requirements with image ${img}"
                 s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).requirements.DockerRequirement.dockerPull = env(t)' -i $path
             else
+                echo "🔧 Updating CommandLineTool ${tool} hints with image ${img}"
                 s="${tool}" t="${img}" yq -i eval '(.$graph[] | select (.id == env(s)) ).hints.DockerRequirement.dockerPull = env(t)' -i $path
             fi
           done
