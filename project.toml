@@ -119,7 +119,7 @@ name = "stac-test"
 description = "Test case for stac tool."
 
 [tools.stac.tests.params]
-rasters = [{"class"="File", "path"="/calrissian/norm-diff/results/otsu.tif"}]
+rasters = [{"class"="File", "path"="/calrissian/otsu/results/otsu.tif"}]
 item = ["https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"]
 
 
