@@ -64,7 +64,7 @@ name = "norm_diff-test"
 description = "Test case for norm_diff tool."
 
 [tools.norm_diff.tests.params]
-rasters = ["/calrissian/crop-green/results/crop_green.tif", "/calrissian/crop-nir/results/crop_nir.tif"]
+rasters = [{"class"="File", "path"="/calrissian/crop-green/results/crop_green.tif"}, {"class"="File", "path"="/calrissian/crop-nir/results/crop_nir.tif"}]
 
 [tools.norm_diff.tests.execution]
 volume = "/calrissian/norm-diff"
