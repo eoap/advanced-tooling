@@ -57,6 +57,7 @@ tool_logs_basepath = "logs"
 
 [tools.norm_diff]
 context = "command-line-tools/norm_diff"
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl#norm_diff"
 
 [[tools.norm_diff.tests]]
 name = "norm_diff-test"
@@ -85,10 +86,11 @@ tool_logs_basepath = "logs"
 
 [tools.otsu]
 context = "command-line-tools/otsu"
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl#otsu"
 
 [tools.stac]
 context = "command-line-tools/stac"
-
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl#stac"
 
 
 [build.cluster]
