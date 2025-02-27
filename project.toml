@@ -3,7 +3,7 @@ name = "my-cwl-project"
 version = "1.0.0"
 
 [build]
-engine = "local"
+engine = "cluster"
 
 [build.local]
 runtime="docker"
