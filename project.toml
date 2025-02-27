@@ -9,7 +9,7 @@ context = "command-line-tools/crop"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#crop"
 
 [[tools.crop.tests]]
-name = "crop-test-greeb"
+name = "crop-test-green"
 description = "Test case 1 for crop tool - green band."
 
 [tools.crop.tests.params]
@@ -18,19 +18,19 @@ aoi = "-121.399,39.834,-120.74,40.472"
 epsg = "EPSG:4326"
 band = "green"
 
-[tools.crop.tests.execution]
-volume = "/calrissian/crop-green"
+[tools.crop.tests.execution.cluster]
 max_ram = "1G"
 max_cores = 1
 pod_serviceaccount = "calrissian-sa"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
 
 [tools.crop.tests.execution.paths]
 stdout = "results.json"
 stderr = "app.log"
 tmp_outdir_prefix = "tmp"
 outdir = "results"
-usage_report = "usage.json"
-tool_logs_basepath = "logs"
+volume = "/calrissian/crop-green"
 
 [[tools.crop.tests]]
 name = "crop-test-nir"
@@ -42,19 +42,19 @@ aoi = "-121.399,39.834,-120.74,40.472"
 epsg = "EPSG:4326"
 band = "nir"
 
-[tools.crop.tests.execution]
-volume = "/calrissian/crop-nir"
+[tools.crop.tests.execution.cluster]
 max_ram = "1G"
 max_cores = 1
 pod_serviceaccount = "calrissian-sa"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
 
 [tools.crop.tests.execution.paths]
 stdout = "results.json"
 stderr = "app.log"
 tmp_outdir_prefix = "tmp"
 outdir = "results"
-usage_report = "usage.json"
-tool_logs_basepath = "logs"
+volume = "/calrissian/crop-nir"
 
 
 [tools.norm_diff]
@@ -68,22 +68,19 @@ description = "Test case for norm_diff tool."
 [tools.norm_diff.tests.params]
 rasters = [{"class"="File", "path"="/calrissian/crop-green/results/crop_green.tif"}, {"class"="File", "path"="/calrissian/crop-nir/results/crop_nir.tif"}]
 
-[tools.norm_diff.tests.execution]
-volume = "/calrissian/norm-diff"
+[tools.norm_diff.tests.execution.cluster]
 max_ram = "1G"
 max_cores = 1
 pod_serviceaccount = "calrissian-sa"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
 
 [tools.norm_diff.tests.execution.paths]
+volume = "/calrissian/norm-diff"
 stdout = "results.json"
 stderr = "app.log"
 tmp_outdir_prefix = "tmp"
 outdir = "results"
-usage_report = "usage.json"
-tool_logs_basepath = "logs"
-
-
-
 
 
 [tools.otsu]
@@ -97,19 +94,20 @@ description = "Test case for otsu tool."
 [tools.otsu.tests.params]
 raster = {"class"="File", "path"="/calrissian/norm-diff/results/norm_diff.tif"}
 
-[tools.otsu.tests.execution]
-volume = "/calrissian/otsu"
+[tools.otsu.tests.execution.cluster]
 max_ram = "1G"
 max_cores = 1
 pod_serviceaccount = "calrissian-sa"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
 
 [tools.otsu.tests.execution.paths]
+volume = "/calrissian/otsu"
 stdout = "results.json"
 stderr = "app.log"
 tmp_outdir_prefix = "tmp"
 outdir = "results"
-usage_report = "usage.json"
-tool_logs_basepath = "logs"
+
 
 
 [tools.stac]
@@ -125,19 +123,19 @@ rasters = [{"class"="File", "path"="/calrissian/otsu/results/otsu.tif"}]
 item = ["https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"]
 
 
-[tools.stac.tests.execution]
-volume = "/calrissian/stac"
+[tools.stac.tests.execution.cluster]
 max_ram = "1G"
 max_cores = 1
 pod_serviceaccount = "calrissian-sa"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
 
 [tools.stac.tests.execution.paths]
+volume = "/calrissian/stac"
 stdout = "results.json"
 stderr = "app.log"
 tmp_outdir_prefix = "tmp"
 outdir = "results"
-usage_report = "usage.json"
-tool_logs_basepath = "logs"
 
 [build]
 engine = "local"

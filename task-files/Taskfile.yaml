@@ -7,6 +7,11 @@ tasks:
       - |
         #!/bin/bash
         set -e
+        engine=$(tomlq -r '.build.engine' project.toml)
+        if [ "$engine" != "cluster" ]; then
+            echo "❌ Build engine is set to \"$engine\", skipping"
+            exit 0
+        fi
         echo "🚀 Preparing skaffold build configuration"
         # Define output file
         OUTPUT_FILE="skaffold-auto.yaml"
@@ -60,6 +65,11 @@ tasks:
     cmds:
       - defer: rm -fr skaffold-auto.yaml
       - |
+        engine=$(tomlq -r '.build.engine' project.toml)
+        if [ "$engine" != "cluster" ]; then
+            echo "❌ Build engine is set to \"$engine\", skipping"
+            exit 0
+        fi
         echo "🚀 Building images with Skaffold..."
         skaffold build -f skaffold-auto.yaml -v=error -q > build.json 2>/dev/null
         echo "✅ Images built successfully"
@@ -95,11 +105,10 @@ tasks:
         echo "✅ CWL workflows updated successfully"
 
   build-cluster:
-    silent: true 
+    silent: true
     cmds:
     - task: prepare-kaniko
     - task: build-kaniko
-    - task: update
 
   build-local:
     silent: true
@@ -109,8 +118,8 @@ tasks:
         engine=$(tomlq -r '.build.engine' project.toml)
 
         if [ "$engine" != "local" ]; then
-            echo "❌ Build engine is set to \"$engine\", use \"local\" instead"
-            exit 1
+            echo "❌ Build engine is set to \"$engine\", skipping"
+            exit 0
         fi
 
         # Initialize build.yaml
@@ -145,19 +154,14 @@ tasks:
         done
 
         echo "✅ Images built successfully"
-      - task: update
 
   build:
     silent: true
     cmds:
-      - |
-        engine=$(tomlq -r '.build.engine' project.toml)
-        if [ "$engine" = "cluster" ]; then
-          task build-cluster
-        else
-          task build-local
-        fi
-
+      - task: build-local
+      - task: build-cluster
+      - task: update     
+       
   test:
     silent: true
     cmds:
@@ -219,7 +223,8 @@ tasks:
       - |
         #!/bin/bash
         set -e
-        echo "🚀 Running tests"
+        engine=$(tomlq -r '.build.engine' project.toml)
+        echo "🚀 Running tests using engine $engine"
         i=0
         var="{{.VAR}}"
         tomlq -c ".tools.$var" project.toml | while read -r tool; do
@@ -243,20 +248,33 @@ tasks:
               # write params to a file
               echo $test | jq -r .params > params.yaml
 
-              volume=$( echo $test | jq -r .execution.volume)
+              volume=$( echo $test | jq -r .execution.paths.volume)
               mkdir -p $volume
-              cmd=$(printf "%s\n" "calrissian \
-              --stdout ${volume}/$(echo "$test" | jq -r .execution.paths.stdout) \
-              --stderr ${volume}/$(echo "$test" | jq -r .execution.paths.stderr) \
-              --max-ram $(echo "$test" | jq -r .execution.max_ram) \
-              --max-cores \"$(echo "$test" | jq -r .execution.max_cores)\" \
-              --tmp-outdir-prefix ${volume}/$(echo "$test" | jq -r .execution.paths.tmp_outdir_prefix)/ \
-              --outdir ${volume}/$(echo "$test" | jq -r .execution.paths.outdir) \
-              --usage-report ${volume}/$(echo "$test" | jq -r .execution.paths.usage_report) \
-              --tool-logs-basepath ${volume}/$(echo "$test" | jq -r .execution.paths.tool_logs_basepath) \
-              --pod-serviceaccount $(echo "$test" | jq -r .execution.pod_serviceaccount) \
-              ${path} \
-              params.yaml")
+              if [ "$engine" = "cluster" ]; then
+                cmd=$(printf "%s\n" "calrissian \
+                --stdout ${volume}/$(echo "$test" | jq -r .execution.paths.stdout) \
+                --stderr ${volume}/$(echo "$test" | jq -r .execution.paths.stderr) \
+                --max-ram $(echo "$test" | jq -r .execution.cluster.max_ram) \
+                --max-cores \"$(echo "$test" | jq -r .execution.cluster.max_cores)\" \
+                --tmp-outdir-prefix ${volume}/$(echo "$test" | jq -r .execution.paths.tmp_outdir_prefix)/ \
+                --outdir ${volume}/$(echo "$test" | jq -r .execution.paths.outdir) \
+                --usage-report ${volume}/$(echo "$test" | jq -r .execution.cluster.usage_report) \
+                --tool-logs-basepath ${volume}/$(echo "$test" | jq -r .execution.cluster.tool_logs_basepath) \
+                --pod-serviceaccount $(echo "$test" | jq -r .execution.cluster.pod_serviceaccount) \
+                ${path} \
+                params.yaml")
+              elif [ "$engine" = "local" ]; then
+                cmd=$(printf "%s\n" "cwltool \
+                --tmp-outdir-prefix ${volume}/$(echo "$test" | jq -r .execution.paths.tmp_outdir_prefix)/ \
+                --outdir ${volume}/$(echo "$test" | jq -r .execution.paths.outdir) \
+                --strict-memory-limit \
+                --strict-cpu-limit \
+                ${path} \
+                params.yaml > ${volume}/$(echo "$test" | jq -r .execution.paths.stdout) 2> ${volume}/$(echo "$test" | jq -r .execution.paths.stderr)")
+              else
+                echo "❌ Unsupported engine: $engine"
+                exit 1
+              fi
               echo $cmd  
 
               eval $cmd
