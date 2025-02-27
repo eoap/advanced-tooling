@@ -324,3 +324,64 @@ tasks:
 
 * Uses Calrissian in Kubernetes or CWLTool locally.
 * Runs each workflow test dynamically.
+
+## Cluster configuration
+
+Create an image pull secret:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kaniko-secret
+data:
+  .dockerconfigjson: >-
+    eyJh..ViJ9fX0=
+type: kubernetes.io/dockerconfigjson
+```
+
+Create a ServiceAccount and mount the image pull secret:
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kaniko-sa
+imagePullSecrets:
+  - name: kaniko-secret
+```
+
+Create a Role with:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kaniko-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "get", "list", "watch", "delete"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get","list"]
+```
+
+And the RoleBinding to associate the Role to the ServiceAccount:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kaniko-rolebinding
+subjects:
+  - kind: ServiceAccount
+    name: kaniko-sa
+roleRef:
+  kind: Role
+  name: kaniko-role
+  apiGroup: rbac.authorization.k8s.io
+```
