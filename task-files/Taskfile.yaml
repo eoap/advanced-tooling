@@ -232,7 +232,7 @@ tasks:
 
               echo $cmd  
 
-              eval $cmd
+              $cmd
               j=$((j+1))
             done
           fi
@@ -292,22 +292,22 @@ tasks:
                 if [ "$runtime" = "podman" ]; then
                     export CWLTOOL_OPTIONS="--podman"
                 fi
-                stdout=${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout)
-                stderr=${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr)
+                stdout=${volume}/$(echo "$test" | jq -r .execution.paths.stdout)
+                stderr=${volume}/$(echo "$test" | jq -r .execution.paths.stderr)
                 cmd=$(printf "%s\n" "cwltool \
                 --tmp-outdir-prefix ${volume}/$(echo "$test" | jq -r .execution.paths.tmp_outdir_prefix)/ \
                 --outdir ${volume}/$(echo "$test" | jq -r .execution.paths.outdir) \
                 --strict-memory-limit \
                 --strict-cpu-limit \
                 ${path} \
-                params.yaml > >(tee $stdout ) 2> >(tee $stderr >&2)  ")
+                params.yaml > >(tee $stdout ) 2> >(tee $stderr >&2)")
               else
                 echo "❌ Unsupported engine: $engine"
                 exit 1
               fi
               echo $cmd  
 
-              eval $cmd
+              $cmd
               j=$((j+1))
             done
           fi
