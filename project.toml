@@ -2,6 +2,8 @@
 name = "my-cwl-project"
 version = "1.0.0"
 
+
+
 [tools.crop]
 context = "command-line-tools/crop"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#crop"
@@ -137,7 +139,11 @@ outdir = "results"
 usage_report = "usage.json"
 tool_logs_basepath = "logs"
 
+[build]
+engine = "local"
 
+[build.local]
+runtime="docker"
 
 [build.cluster]
 namespace = "eoap-advanced-tooling"

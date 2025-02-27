@@ -1,7 +1,7 @@
 version: '3'
 
 tasks:
-  prepare:
+  prepare-kaniko:
     silent: true
     cmds: 
       - |
@@ -55,7 +55,7 @@ tasks:
         done
 
         echo "✅ Skaffold configuration generated in $OUTPUT_FILE"
-  build:
+  build-kaniko:
     silent: true
     cmds:
       - defer: rm -fr skaffold-auto.yaml
@@ -93,6 +93,70 @@ tasks:
           echo "✅ CWL workflow $path updated successfully"
         done
         echo "✅ CWL workflows updated successfully"
+
+  build-cluster:
+    silent: true 
+    cmds:
+    - task: prepare-kaniko
+    - task: build-kaniko
+    - task: update
+
+  build-local:
+    silent: true
+    cmds:
+      - |
+        #!/bin/bash
+        engine=$(tomlq -r '.build.engine' project.toml)
+
+        if [ "$engine" != "local" ]; then
+            echo "❌ Build engine is set to \"$engine\", use \"local\" instead"
+            exit 1
+        fi
+
+        # Initialize build.yaml
+        yq eval -n -o=json '.builds=[]' > build.json
+
+        runtime=$(tomlq -r '.build.local.runtime' project.toml)
+        if [ "$runtime" = "docker" ]; then
+            registry="docker.io/library"
+            registry="localhost"
+        elif [ "$runtime" = "podman" ]; then
+            registry="localhost"
+        else
+            echo "❌ Unsupported runtime: $runtime"
+            exit 1
+        fi
+        echo "🚀 Building images with $runtime..."
+
+        for tool in $(tomlq -r '.tools | keys[]' project.toml); do
+            path=$(tomlq -r ".tools.$tool.context" project.toml)
+            echo "🔧 Building $tool"
+            
+            eval $runtime build -t $registry/$tool $path
+            
+            # Extract image ID and manually construct the expected tag format
+            image_id=$(eval $runtime inspect $registry/$tool | yq eval '.[0].Id' -)
+            image_tag="$registry/$tool:latest"
+
+            # Update build.yaml with the new image
+            yq eval -i -o=json  ".builds += [{\"imageName\": \"$registry/$tool\", \"tag\": \"$image_tag\"}]" build.json
+
+            echo "🔧 $tool built"
+        done
+
+        echo "✅ Images built successfully"
+      - task: update
+
+  build:
+    silent: true
+    cmds:
+      - |
+        engine=$(tomlq -r '.build.engine' project.toml)
+        if [ "$engine" = "cluster" ]; then
+          task build-cluster
+        else
+          task build-local
+        fi
 
   test:
     silent: true
