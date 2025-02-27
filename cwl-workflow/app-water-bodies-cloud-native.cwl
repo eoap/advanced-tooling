@@ -120,7 +120,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: cr.terradue.com/earthquake-monitoring/crop:e7562eb@sha256:dfd9717efd711d069af11367aac100735902c5f28a1caae5af39941434959d17
+        dockerPull: cr.terradue.com/earthquake-monitoring/crop:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:
@@ -158,7 +158,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: cr.terradue.com/earthquake-monitoring/norm_diff:e7562eb@sha256:a55cb8cda8afaec102d3c082302a374682d3dc174e0116c82f5d2b69c897baaf
+        dockerPull: cr.terradue.com/earthquake-monitoring/norm_diff:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:
@@ -184,7 +184,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: cr.terradue.com/earthquake-monitoring/otsu:e7562eb@sha256:7ca9d41a6b5e3592dc22c71accd9b0381da76fae588d503e1913ca2e8cdaf01a
+        dockerPull: cr.terradue.com/earthquake-monitoring/otsu:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:
@@ -210,7 +210,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: cr.terradue.com/earthquake-monitoring/stac:e7562eb@sha256:7fc43f7ad5840c22cfa84dcfdd8d91a3921d8a9e9d8bc05479aa6dc5ad0db269
+        dockerPull: cr.terradue.com/earthquake-monitoring/stac:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:

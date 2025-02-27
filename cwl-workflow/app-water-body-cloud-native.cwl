@@ -82,7 +82,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: localhost/crop:latest
+        dockerPull: cr.terradue.com/earthquake-monitoring/crop:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:
@@ -120,7 +120,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: localhost/norm-diff:latest
+        dockerPull: cr.terradue.com/earthquake-monitoring/norm_diff:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:
@@ -146,7 +146,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: localhost/otsu:latest
+        dockerPull: cr.terradue.com/earthquake-monitoring/otsu:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:
@@ -172,7 +172,7 @@ $graph:
         ramMax: 512
     hints:
       DockerRequirement:
-        dockerPull: localhost/stac:latest
+        dockerPull: cr.terradue.com/earthquake-monitoring/stac:latest
     baseCommand: ["python", "-m", "app"]
     arguments: []
     inputs:
