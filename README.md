@@ -53,3 +53,24 @@ calrissian \
     cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies \
     params.yml
 ```
+
+## Documentation
+
+| Feature           | How It Works                                   |
+|------------------|-----------------------------------------------|
+| Execution Tool   | Uses `calrissian` inside Kubernetes            |
+| Where It Runs    | Inside a Kubernetes pod                      |
+| Storage Access   | Uses Kubernetes PVC (`/calrissian`)            |
+| Resource Limits  | Uses `max_ram` and `max_cores`                   |
+| Service Account  | Uses `calrissian-sa` for authentication        |
+| Logging         | Uses kubectl logs or calrissian log paths     |
+| Use Case        | Large-scale execution, parallelized workloads |
+
+
+| Step | Description |
+|------|--------------------------------------------------------------|
+| 1️⃣ | Selects calrissian as the engine - The test runs inside a Kubernetes pod. |
+| 2️⃣ | Uses Kubernetes PVC for Storage - Workflow runs in /calrissian, outputs are stored there. |
+| 3️⃣ | Uses Resource Limits (max_ram, max_cores) - Ensures proper resource allocation in the cluster. |
+| 4️⃣ | Runs Workflows Inside a Pod - Uses a Pod with a ServiceAccount for execution. |
+| 5️⃣ | Extracts Logs from Kubernetes - kubectl logs or Calrissian's tool_logs_basepath provides logs. |

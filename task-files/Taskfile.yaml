@@ -19,8 +19,8 @@ tasks:
         # read the configuration file
         namespace=$( tomlq -r '.build.cluster.namespace' project.toml )
         service_account=$( tomlq -r '.build.cluster.serviceAccount' project.toml )
-        secret=$( tomlq -r '.build.container.secret' project.toml )
-        registry=$( tomlq -r '.build.container.registry' project.toml )
+        secret=$( tomlq -r '.build.cluster.secret' project.toml )
+        registry=$( tomlq -r '.build.cluster.registry' project.toml )
 
         # Create base YAML structure using yq
         enamespace=$namespace eservice_account=$service_account esecret=$secret yq eval -n '
@@ -126,11 +126,11 @@ tasks:
         yq eval -n -o=json '.builds=[]' > build.json
 
         runtime=$(tomlq -r '.build.local.runtime' project.toml)
-        if [ "$runtime" = "docker" ]; then
+        registry=$(tomlq -r '.build.local.registry' project.toml)
 
-            registry="localhost"
+        if [ "$runtime" = "docker" ]; then
+            unset CWLTOOL_OPTIONS
         elif [ "$runtime" = "podman" ]; then
-            registry="localhost"
             export CWLTOOL_OPTIONS="--podman"
         else
             echo "❌ Unsupported runtime: $runtime"
@@ -143,7 +143,9 @@ tasks:
             echo "🔧 Building $tool"
             
             eval $runtime build -t $registry/$tool $path
-            
+            if [ "$registry" != "localhost" ]; then
+                $runtime push $registry/$tool
+            fi
             # Extract image ID and manually construct the expected tag format
             image_id=$(eval $runtime inspect $registry/$tool | yq eval '.[0].Id' -)
             image_tag="$registry/$tool:latest"
@@ -215,20 +217,17 @@ tasks:
                 if [ "$runtime" = "podman" ]; then
                     export CWLTOOL_OPTIONS="--podman"
                 fi
-                stdout=${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout)
-                stderr=${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr)
                 cmd=$(printf "%s\n" "cwltool \
                 --tmp-outdir-prefix ${volume}/$(echo "$test_config" | jq -r .execution.paths.tmp_outdir_prefix)/ \
                 --outdir ${volume}/$(echo "$test_config" | jq -r .execution.paths.outdir) \
                 --strict-memory-limit \
                 --strict-cpu-limit \
                 ${path} \
-                params.yaml > >(tee $stdout ) 2> >(tee $stderr >&2) ")
+                params.yaml")
               else
                 echo "❌ Unsupported engine: $engine"
                 exit 1
               fi
-
 
               echo $cmd  
 
@@ -292,17 +291,13 @@ tasks:
                 if [ "$runtime" = "podman" ]; then
                     export CWLTOOL_OPTIONS="--podman"
                 fi
-                stdout=${volume}/$(echo "$test" | jq -r .execution.paths.stdout)
-                stderr=${volume}/$(echo "$test" | jq -r .execution.paths.stderr)
-                echo "stdout: $stdout"
-                echo "stderr: $stderr"
+
                 cmd=$(printf "%s\n" "cwltool \
                 --tmp-outdir-prefix ${volume}/$(echo "$test" | jq -r .execution.paths.tmp_outdir_prefix)/ \
                 --outdir ${volume}/$(echo "$test" | jq -r .execution.paths.outdir) \
                 --strict-memory-limit \
                 --strict-cpu-limit \
-                ${path} \
-                params.yaml > >(tee $stdout ) 2> >(tee $stderr >&2)")
+                ${path} params.yaml")
               else
                 echo "❌ Unsupported engine: $engine"
                 exit 1

@@ -7,12 +7,11 @@ engine = "local"
 
 [build.local]
 runtime="docker"
+registry="cr.terradue.com/earthquake-monitoring"
 
 [build.cluster]
 namespace = "eoap-advanced-tooling"
 serviceAccount = "kaniko-sa"
-
-[build.container]
 registry = "cr.terradue.com/earthquake-monitoring"
 secret = "kaniko-secret"
 
