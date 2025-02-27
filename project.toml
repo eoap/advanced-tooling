@@ -88,6 +88,28 @@ tool_logs_basepath = "logs"
 context = "command-line-tools/otsu"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#otsu"
 
+[[tools.otsu.tests]]
+name = "norm_diff-test"
+description = "Test case for otsu tool."
+
+[tools.otsu.tests.params]
+raster = {"class"="File", "path"="/calrissian/norm-diff/results/norm_diff.tif"}
+
+[tools.otsu.tests.execution]
+volume = "/calrissian/otsu"
+max_ram = "1G"
+max_cores = 1
+pod_serviceaccount = "calrissian-sa"
+
+[tools.otsu.tests.execution.paths]
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+
+
 [tools.stac]
 context = "command-line-tools/stac"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#stac"
