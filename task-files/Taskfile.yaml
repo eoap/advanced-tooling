@@ -294,6 +294,8 @@ tasks:
                 fi
                 stdout=${volume}/$(echo "$test" | jq -r .execution.paths.stdout)
                 stderr=${volume}/$(echo "$test" | jq -r .execution.paths.stderr)
+                echo "stdout: $stdout"
+                echo "stderr: $stderr"
                 cmd=$(printf "%s\n" "cwltool \
                 --tmp-outdir-prefix ${volume}/$(echo "$test" | jq -r .execution.paths.tmp_outdir_prefix)/ \
                 --outdir ${volume}/$(echo "$test" | jq -r .execution.paths.outdir) \
