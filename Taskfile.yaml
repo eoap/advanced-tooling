@@ -32,7 +32,7 @@ tasks:
     cmds:
     - task: remote:test-tool
       vars:
-        VAR: "ndvi"
+        VAR: "norm_diff"
 
   test-otsu:
     cmds:

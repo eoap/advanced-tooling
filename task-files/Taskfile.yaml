@@ -126,7 +126,7 @@ tasks:
               echo $test_config | jq -r .params > params.yaml
 
               volume=$( echo $test_config | jq -r .execution.volume)
-
+              mkdir -p $volume
               cmd=$(printf "%s\n" "calrissian \
               --stdout ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout) \
               --stderr ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) \
@@ -159,12 +159,12 @@ tasks:
         i=0
         var="{{.VAR}}"
         tomlq -c ".tools.$var" project.toml | while read -r tool; do
-          echo $tool
+  
           path=$( echo $tool | jq -r .path)
 
           echo "tool path: $path"
           tests=$( echo $tool | jq -r .tests )
-          echo $tests
+
           if [ "$tests" != "null" ]; then
             j=0
             # iterate over the tests
@@ -180,7 +180,7 @@ tasks:
               echo $test | jq -r .params > params.yaml
 
               volume=$( echo $test | jq -r .execution.volume)
-
+              mkdir -p $volume
               cmd=$(printf "%s\n" "calrissian \
               --stdout ${volume}/$(echo "$test" | jq -r .execution.paths.stdout) \
               --stderr ${volume}/$(echo "$test" | jq -r .execution.paths.stderr) \
@@ -195,7 +195,7 @@ tasks:
               params.yaml")
               echo $cmd  
 
-              #eval $cmd
+              eval $cmd
               j=$((j+1))
             done
           fi

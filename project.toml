@@ -7,8 +7,8 @@ context = "command-line-tools/crop"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#crop"
 
 [[tools.crop.tests]]
-name = "crop-test-1"
-description = "Test case 1 for crop tool."
+name = "crop-test-greeb"
+description = "Test case 1 for crop tool - green band."
 
 [tools.crop.tests.params]
 item = "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"
@@ -18,8 +18,8 @@ band = "green"
 
 [tools.crop.tests.execution]
 volume = "/calrissian/crop-green"
-max_ram = "4G"
-max_cores = 8
+max_ram = "1G"
+max_cores = 1
 pod_serviceaccount = "calrissian-sa"
 
 [tools.crop.tests.execution.paths]
@@ -31,8 +31,8 @@ usage_report = "usage.json"
 tool_logs_basepath = "logs"
 
 [[tools.crop.tests]]
-name = "crop-test-2"
-description = "Test case 2 for crop tool."
+name = "crop-test-nir"
+description = "Test case 2 for crop tool - nir band."
 
 [tools.crop.tests.params]
 item = "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"
@@ -42,8 +42,8 @@ band = "nir"
 
 [tools.crop.tests.execution]
 volume = "/calrissian/crop-nir"
-max_ram = "4G"
-max_cores = 8
+max_ram = "1G"
+max_cores = 1
 pod_serviceaccount = "calrissian-sa"
 
 [tools.crop.tests.execution.paths]
@@ -55,10 +55,33 @@ usage_report = "usage.json"
 tool_logs_basepath = "logs"
 
 
-
-
 [tools.norm_diff]
 context = "command-line-tools/norm_diff"
+
+[[tools.norm_diff.tests]]
+name = "norm_diff-test"
+description = "Test case for norm_diff tool."
+
+[tools.norm_diff.tests.params]
+rasters = ["/calrissian/crop-green/results/crop_green.tif", "/calrissian/crop-nir/results/crop_nir.tif"]
+
+[tools.norm_diff.tests.execution]
+volume = "/calrissian/norm-diff"
+max_ram = "1G"
+max_cores = 1
+pod_serviceaccount = "calrissian-sa"
+
+[tools.norm_diff.tests.execution.paths]
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+
+
+
+
 
 [tools.otsu]
 context = "command-line-tools/otsu"
