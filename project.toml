@@ -60,7 +60,7 @@ context = "command-line-tools/norm_diff"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#norm_diff"
 
 [[tools.norm_diff.tests]]
-name = "norm_diff-test"
+name = "norm-diff-test"
 description = "Test case for norm_diff tool."
 
 [tools.norm_diff.tests.params]
@@ -89,7 +89,7 @@ context = "command-line-tools/otsu"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#otsu"
 
 [[tools.otsu.tests]]
-name = "norm_diff-test"
+name = "otsu-test"
 description = "Test case for otsu tool."
 
 [tools.otsu.tests.params]
@@ -113,6 +113,30 @@ tool_logs_basepath = "logs"
 [tools.stac]
 context = "command-line-tools/stac"
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#stac"
+
+[[tools.stac.tests]]
+name = "stac-test"
+description = "Test case for stac tool."
+
+[tools.stac.tests.params]
+rasters = [{"class"="File", "path"="/calrissian/norm-diff/results/otsu.tif"}]
+item = ["https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"]
+
+
+[tools.stac.tests.execution]
+volume = "/calrissian/stac"
+max_ram = "1G"
+max_cores = 1
+pod_serviceaccount = "calrissian-sa"
+
+[tools.stac.tests.execution.paths]
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+
 
 
 [build.cluster]
