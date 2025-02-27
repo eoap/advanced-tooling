@@ -298,6 +298,58 @@ tasks:
 * Uses Calrissian in Kubernetes or CWLTool locally.
 * Runs each workflow test dynamically.
 
+## Project Taskfile
+
+The Taskfile imports a remote Taskfile from https://github.com/eoap/task-files/tree/main/build-test and simply combines remote tasks
+
+```yaml
+version: '3'
+
+includes:
+  remote: https://raw.githubusercontent.com/eoap/task-files/c750354651eed547cc310aa7a856921e77ebc058/build-test/Taskfile.yaml
+
+tasks:
+  build:
+  - task: remote:build
+
+  prepare:
+  - task: remote:prepare
+
+  test:
+  - task: remote:test
+
+  test-all:
+    cmds: 
+    - task: test-crop
+    - task: test-norm-diff
+    - task: test-otsu
+    - task: test-stac
+
+  test-crop:
+    cmds:
+    - task: remote:test-tool
+      vars:
+        VAR: "crop"
+
+  test-norm-diff:
+    cmds:
+    - task: remote:test-tool
+      vars:
+        VAR: "norm_diff"
+
+  test-otsu:
+    cmds:
+    - task: remote:test-tool
+      vars:
+        VAR: "otsu" 
+
+  test-stac:
+    cmds:
+    - task: remote:test-tool
+      vars:
+        VAR: "stac"
+```
+
 ## Cluster configuration
 
 Create an image pull secret:
