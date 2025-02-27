@@ -221,7 +221,7 @@ tasks:
                 --strict-memory-limit \
                 --strict-cpu-limit \
                 ${path} \
-                params.yaml > >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout)) 2> >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) >&2)
+                params.yaml > >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout)) 2> >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) >&2) ")
               else
                 echo "❌ Unsupported engine: $engine"
                 exit 1
@@ -296,7 +296,7 @@ tasks:
                 --strict-memory-limit \
                 --strict-cpu-limit \
                 ${path} \
-                params.yaml > ${volume}/$(echo "$test" | jq -r .execution.paths.stdout) 2> ${volume}/$(echo "$test" | jq -r .execution.paths.stderr)")
+                params.yaml > >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout)) 2> >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) >&2) ")
               else
                 echo "❌ Unsupported engine: $engine"
                 exit 1
