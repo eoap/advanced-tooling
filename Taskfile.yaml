@@ -5,9 +5,7 @@ includes:
 
 tasks:
   build:
-  - task: remote:prepare
   - task: remote:build
-  - task: remote:update
 
   prepare:
   - task: remote:prepare

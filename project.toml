@@ -167,20 +167,19 @@ stac_items = [
 aoi = "-121.399,39.834,-120.74,40.472"
 epsg = "EPSG:4326"
 
-[workflows.tests.execution]
-volume = "/calrissian"
+[workflows.tests.execution.cluster]
+usage_report = "usage.json"
+pool_logs_basepath = "logs"
 max_ram = "4G"
 max_cores = 8
 pod_serviceaccount = "calrissian-sa"
 
 [workflows.tests.execution.paths]
+volume = "/calrissian"
 stdout = "results.json"
 stderr = "app.log"
 tmp_outdir_prefix = "tmp"
 outdir = "results"
-usage_report = "usage.json"
-tool_logs_basepath = "logs"
-
 
 [[workflows]]
 path = "cwl-workflow/app-water-body-cloud-native.cwl#water-bodies"

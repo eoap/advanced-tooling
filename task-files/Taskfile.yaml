@@ -169,7 +169,8 @@ tasks:
       - |
         #!/bin/bash
         set -e
-        echo "🚀 Running tests"
+        engine=$(tomlq -r '.build.engine' project.toml)
+        echo "🚀 Running tests using engine $engine"
         i=0
         tomlq -c '.workflows[]' project.toml | while read -r workflow; do
           path=$(tomlq -r ".workflows[$i].path" project.toml)
@@ -193,20 +194,35 @@ tasks:
               # write params to a file
               echo $test_config | jq -r .params > params.yaml
 
-              volume=$( echo $test_config | jq -r .execution.volume)
+              volume=$( echo $test_config | jq -r .execution.paths.volume)
               mkdir -p $volume
-              cmd=$(printf "%s\n" "calrissian \
-              --stdout ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout) \
-              --stderr ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) \
-              --max-ram $(echo "$test_config" | jq -r .execution.max_ram) \
-              --max-cores \"$(echo "$test_config" | jq -r .execution.max_cores)\" \
-              --tmp-outdir-prefix ${volume}/$(echo "$test_config" | jq -r .execution.paths.tmp_outdir_prefix)/ \
-              --outdir ${volume}/$(echo "$test_config" | jq -r .execution.paths.outdir) \
-              --usage-report ${volume}/$(echo "$test_config" | jq -r .execution.paths.usage_report) \
-              --tool-logs-basepath ${volume}/$(echo "$test_config" | jq -r .execution.paths.tool_logs_basepath) \
-              --pod-serviceaccount $(echo "$test_config" | jq -r .execution.pod_serviceaccount) \          
-              ${path} \
-              params.yaml")
+              if [ "$engine" = "cluster" ]; then
+                cmd=$(printf "%s\n" "calrissian \
+                --stdout ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout) \
+                --stderr ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) \
+                --max-ram $(echo "$test_config" | jq -r .execution.cluster.max_ram) \
+                --max-cores \"$(echo "$test_config" | jq -r .execution.cluster.max_cores)\" \
+                --tmp-outdir-prefix ${volume}/$(echo "$test_config" | jq -r .execution.paths.tmp_outdir_prefix)/ \
+                --outdir ${volume}/$(echo "$test_config" | jq -r .execution.paths.outdir) \
+                --usage-report ${volume}/$(echo "$test_config" | jq -r .execution.cluster.usage_report) \
+                --tool-logs-basepath ${volume}/$(echo "$test_config" | jq -r .execution.cluster.tool_logs_basepath) \
+                --pod-serviceaccount $(echo "$test_config" | jq -r .execution.cluster.pod_serviceaccount) \          
+                ${path} \
+                params.yaml")
+              elif [ "$engine" = "local" ]; then
+                cmd=$(printf "%s\n" "cwltool \
+                --tmp-outdir-prefix ${volume}/$(echo "$test_config" | jq -r .execution.paths.tmp_outdir_prefix)/ \
+                --outdir ${volume}/$(echo "$test_config" | jq -r .execution.paths.outdir) \
+                --strict-memory-limit \
+                --strict-cpu-limit \
+                ${path} \
+                params.yaml > >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stdout)) 2> >(tee ${volume}/$(echo "$test_config" | jq -r .execution.paths.stderr) >&2)
+              else
+                echo "❌ Unsupported engine: $engine"
+                exit 1
+              fi
+
+
               echo $cmd  
 
               eval $cmd
@@ -219,6 +235,7 @@ tasks:
         echo "✅ Tests passed"
 
   test-tool:
+    silent: true
     cmds:
       - |
         #!/bin/bash
