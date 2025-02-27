@@ -2,7 +2,19 @@
 name = "my-cwl-project"
 version = "1.0.0"
 
+[build]
+engine = "local"
 
+[build.local]
+runtime="docker"
+
+[build.cluster]
+namespace = "eoap-advanced-tooling"
+serviceAccount = "kaniko-sa"
+
+[build.container]
+registry = "cr.terradue.com/earthquake-monitoring"
+secret = "kaniko-secret"
 
 [tools.crop]
 context = "command-line-tools/crop"
@@ -137,19 +149,7 @@ stderr = "app.log"
 tmp_outdir_prefix = "tmp"
 outdir = "results"
 
-[build]
-engine = "local"
 
-[build.local]
-runtime="docker"
-
-[build.cluster]
-namespace = "eoap-advanced-tooling"
-serviceAccount = "kaniko-sa"
-
-[build.container]
-registry = "cr.terradue.com/earthquake-monitoring"
-secret = "kaniko-secret"
 
 [[workflows]]
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies"
