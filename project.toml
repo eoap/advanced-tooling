@@ -174,7 +174,7 @@ max_cores = 8
 pod_serviceaccount = "calrissian-sa"
 
 [workflows.tests.execution.paths]
-volume = "/calrissian"
+volume = "/calrissian/water-bodies"
 stdout = "results.json"
 stderr = "app.log"
 tmp_outdir_prefix = "tmp"
