@@ -7,12 +7,12 @@ engine = "cluster"
 
 [build.local]
 runtime="docker"
-registry="cr.terradue.com/earthquake-monitoring"
+registry="ghcr.io/eoap"
 
 [build.cluster]
 namespace = "eoap-advanced-tooling"
 serviceAccount = "kaniko-sa"
-registry = "cr.terradue.com/earthquake-monitoring"
+registry = "ghcr.io/eoap"
 secret = "kaniko-secret"
 
 [tools.crop]

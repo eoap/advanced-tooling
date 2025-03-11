@@ -92,7 +92,7 @@ Determines where the build runs:
 ```toml
 [build.local]
 runtime = "docker"
-registry = "cr.terradue.com/earthquake-monitoring"
+registry = "ghcr.io/eoap"
 ```
 
 * Specifies container runtime (`docker` or `podman`).
@@ -104,7 +104,7 @@ registry = "cr.terradue.com/earthquake-monitoring"
 [build.cluster]
 namespace = "eoap-advanced-tooling"
 serviceAccount = "kaniko-sa"
-registry = "cr.terradue.com/earthquake-monitoring"
+registry = "ghcr.io/eoap"
 secret = "kaniko-secret"
 ```
 
