@@ -168,11 +168,10 @@ epsg = "EPSG:4326"
 
 [workflows.tests.execution.cluster]
 usage_report = "usage.json"
-pool_logs_basepath = "logs"
+tool_logs_basepath = "logs"
 max_ram = "4G"
 max_cores = 8
 pod_serviceaccount = "calrissian-sa"
-tool_logs_basepath = "logs"
 
 [workflows.tests.execution.paths]
 volume = "/calrissian/water-bodies"
