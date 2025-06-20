@@ -88,6 +88,36 @@ ghcr.io/org/repo/app-water-bodies-cloud-native:1.1.0
 │   └── ...
 ```
 
+## Scanning the OCI artifacts for vulnerabilities
+
+Use `task scan` to inspect the Application Package OCI artifact and scan the container vulnerabilitie:
+
+This prints: 
+
+```
+🔍 Discovering SBOM digests for ghcr.io/eoap/advanced-tooling/app-water-body-cloud-native:0.1.0...
+📥 Pulling sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1 → attached-sboms/sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+✓ Pulled      sboms/ghcr.io_eoap_advanced-tooling_crop_sha256_25aa81b7a9ea49ed94a8a6f070d84039d9e5071f4bc78061f52146c7d37705a8.sbom.spdx.j. 2.74/2.74 MB 100.00%     2s
+  └─ sha256:a6800275c9ccbbca4ea7b935f78605a1e74c5946ab668951bfd2338315161f65
+✓ Pulled      application/vnd.oci.image.manifest.v1+json                                                                                      860/860  B 100.00%     0s
+  └─ sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+Pulled [registry] ghcr.io/eoap/advanced-tooling/app-water-body-cloud-native:0.1.0@sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+Digest: sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+🧪 Scanning SBOM: attached-sboms/sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1/sboms/ghcr.io_eoap_advanced-tooling_crop_sha256_25aa81b7a9ea49ed94a8a6f070d84039d9e5071f4bc78061f52146c7d37705a8.sbom.spdx.json
+2025-06-20T07:48:17+02:00       INFO    Vulnerability scanning is enabled
+2025-06-20T07:48:17+02:00       INFO    Detected SBOM format    format="spdx-json"
+2025-06-20T07:48:17+02:00       WARN    Ignore the OS package as no OS is detected.
+2025-06-20T07:48:17+02:00       INFO    Number of language-specific files       num=1
+2025-06-20T07:48:17+02:00       INFO    [python-pkg] Detecting vulnerabilities...
+
+Python (python-pkg)
+
+Total: 3 (UNKNOWN: 0, LOW: 0, MEDIUM: 1, HIGH: 2, CRITICAL: 0)
+
+...
+```
+
+
 ## Related Tools
 
 oras – OCI Registry As Storage CLI

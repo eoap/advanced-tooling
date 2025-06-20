@@ -112,7 +112,7 @@ jobs:
         run: |
           VERSION="${{ needs.version.outputs.app-version }}"
           OWNER_REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-
+          set -x
           for file in downloads/*.cwl
           do
             base=$(basename "$file" .${VERSION}.cwl)
