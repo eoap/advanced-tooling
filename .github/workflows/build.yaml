@@ -92,18 +92,14 @@ jobs:
             done
           done
 
-          for cwl in cwl-workflow/*.cwl
+          for cwl in $(ls cwl-workflow/*.cwl)
           do
-            r=$(jq -r ".codeRepository" codemeta.json)
-            v="${VERSION}"
-            yq -i eval '."s:codeRepository" = {"URL": env(r)}' "$cwl"
-            yq -i eval '."s:softwareVersion" = env(v)' "$cwl"
-
-            n=$(jq -r '(.author[0].givenName + " " + .author[0].familyName)' codemeta.json)
-            e=$(jq -r '.author[0].email' codemeta.json)
-            a=$(jq -r '.author[0].affiliation["name"]' codemeta.json)
-
-            yq -i eval '.["s:author"] += [{"class": "s:Person", "s.name": env(n), "s.email": env(e), "s.affiliation": env(a)}]' "$cwl"
+            r=$( cat codemeta.json | jq -r ".codeRepository" ) yq -i eval '."s:codeRepository" = {"URL" : env(r)}' $cwl
+            v="${{needs.version.outputs.app-version}}" yq -i eval '."s:softwareVersion" = env(v)' $cwl
+            n=$(cat codemeta.json | jq -r '(.author[0].givenName + " " + .author[0].familyName)') \
+            e=$(cat codemeta.json | jq -r '.author[0].email') \
+            a=$(cat codemeta.json | jq -r '.author[0].affiliation["name"]') \
+            yq eval -i  '."s:author" += [{"class": "s:Person", "s.name": env(n), "s.email": env(e), "s.affiliation": env(a)}]' $cwl
           done
 
           for cwl in cwl-workflow/*.cwl
