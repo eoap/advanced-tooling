@@ -65,3 +65,33 @@ tasks:
   - task: remote:test-by-index
     vars:
       VAR: 0
+
+  scan: 
+    desc: "Scan Application Package OCI artifact for vulnerabilities"
+    silent: true
+    cmds:
+    - |
+      #!/usr/bin/env bash
+
+      REF="ghcr.io/eoap/advanced-tooling/app-water-body-cloud-native:0.1.0"
+      SBOM_BASE_DIR="attached-sboms"
+      mkdir -p "$SBOM_BASE_DIR"
+
+      echo "🔍 Discovering SBOM digests for $REF..."
+      DIGESTS=$(oras discover --artifact-type application/spdx+json \
+          --format json "$REF" | jq -r '.manifests[].digest')
+
+      for digest in $DIGESTS; do
+        OUTDIR="$SBOM_BASE_DIR/$digest"
+        echo "📥 Pulling $digest → $OUTDIR"
+        oras pull "$REF@$digest" -o "$OUTDIR"
+
+        SBOM=$(find "$OUTDIR" -name '*.json' | head -n1)
+        if [ -f "$SBOM" ]; then
+          echo "🧪 Scanning SBOM: $SBOM"
+          trivy sbom "$SBOM"
+        else
+          echo "⚠️ No SBOM found for $digest"
+        fi
+        rm -rf "$OUTDIR"
+      done
