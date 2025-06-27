@@ -149,6 +149,34 @@ tmp_outdir_prefix = "tmp"
 outdir = "results"
 
 
+[tools.stac-geoparquet]
+context = "command-line-tools/stac-geoparquet"
+path = "cwl-workflow/app-water-bodies-cloud-native.cwl#stac-geoparquet"
+
+[[tools.stac-geoparquet.tests]]
+name = "stac-test"
+description = "Test case for stac tool."
+
+[tools.stac-geoparquet.tests.params]
+rasters = [{"class"="File", "path"="/calrissian/otsu/results/otsu.tif"}]
+item = ["https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A"]
+
+
+[tools.stac-geoparquet.tests.execution.cluster]
+max_ram = "1G"
+max_cores = 1
+pod_serviceaccount = "calrissian-sa"
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+
+[tools.stac-geoparquet.tests.execution.paths]
+volume = "/calrissian/stac-geoparquet"
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"
+
+
 
 [[workflows]]
 path = "cwl-workflow/app-water-bodies-cloud-native.cwl#water-bodies"
@@ -181,4 +209,30 @@ tmp_outdir_prefix = "tmp"
 outdir = "results"
 
 [[workflows]]
-path = "cwl-workflow/app-water-body-cloud-native.cwl#water-bodies"
+path = "cwl-workflow/app-water-body-cloud-native-geoparquet.cwl#water-bodies"
+
+[[workflows.tests]]
+name = "water-detection-test-1"
+description = "Test case 1 for water bodies detection (geoparquet)."
+
+[workflows.tests.params]
+stac_items = [
+    "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2B_10TFK_20210713_0_L2A",
+    "https://earth-search.aws.element84.com/v0/collections/sentinel-s2-l2a-cogs/items/S2A_10TFK_20220524_0_L2A"
+]
+aoi = "-121.399,39.834,-120.74,40.472"
+epsg = "EPSG:4326"
+
+[workflows.tests.execution.cluster]
+usage_report = "usage.json"
+tool_logs_basepath = "logs"
+max_ram = "4G"
+max_cores = 8
+pod_serviceaccount = "calrissian-sa"
+
+[workflows.tests.execution.paths]
+volume = "/calrissian/water-bodies"
+stdout = "results.json"
+stderr = "app.log"
+tmp_outdir_prefix = "tmp"
+outdir = "results"

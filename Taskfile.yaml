@@ -29,6 +29,7 @@ tasks:
     - task: test-norm-diff
     - task: test-otsu
     - task: test-stac
+    - task: test-stac-geoparquet
 
   test-crop:
     cmds:
@@ -54,6 +55,12 @@ tasks:
       vars:
         VAR: "stac"
   
+  test-stac-parquet:
+    cmds:
+    - task: remote:test-tool
+      vars:
+        VAR: "stac-geoparquet"
+
   scenario-1:
   - task: remote:test-by-index
     vars:
