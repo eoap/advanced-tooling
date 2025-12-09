@@ -1,9 +1,13 @@
-name: Daily SBOM Scan
+name: SBOM Scan
 
 on:
-  schedule:
-    # run hourly at 58 past the hour
-    - cron: "58 * * * *"
+  # schedule:
+  #   # run hourly at 58 past the hour
+  #   - cron: "58 * * * *"
+  push:
+    branches:
+      - develop
+      - main
 
 jobs:
   scan:
@@ -32,7 +36,10 @@ jobs:
 
           REF="ghcr.io/eoap/advanced-tooling/app-water-bodies-cloud-native-geoparquet:0.1.0"
           SBOM_BASE_DIR="attached-sboms"
+          REPORTS_DIR="trivy-reports"
+
           mkdir -p "$SBOM_BASE_DIR"
+          mkdir -p "$REPORTS_DIR"
 
           echo "🔍 Discovering SBOM digests for $REF..."
           DIGESTS=$(oras discover --artifact-type application/spdx+json \
@@ -40,16 +47,63 @@ jobs:
 
           for digest in $DIGESTS; do
             OUTDIR="$SBOM_BASE_DIR/$digest"
+            REPORT_FILE="$REPORTS_DIR/${digest}.json"
             echo "Pulling $digest → $OUTDIR"
             oras pull "$REF@$digest" -o "$OUTDIR"
 
             SBOM=$(find "$OUTDIR" -name '*.json' | head -n1)
             if [ -f "$SBOM" ]; then
               echo "Scanning SBOM: $SBOM"
-              trivy sbom "$SBOM"
+              trivy sbom "$SBOM" -f json -o "$REPORT_FILE"
             else
               echo "No SBOM found for $digest"
             fi
 
             rm -rf "$OUTDIR"
           done
+          echo "REPORTS_DIR=$REPORTS_DIR" >> $GITHUB_ENV
+
+      - name: Enforce Policy using jq (Fail on Critical/High)
+        shell: bash
+        # Only run this step if the previous one succeeded (reports were generated)
+        if: success()
+        run: |
+          set -euo pipefail
+
+          REPORTS_DIR="${{ env.REPORTS_DIR }}"
+          TOTAL_VULNERABILITIES=0
+
+          echo "Scanning reports in $REPORTS_DIR for policy violations..."
+
+          # Define the jq filter to count Critical and High vulnerabilities
+          # .Results[] - iterate over all scan results (file, package, etc.)
+          # .Vulnerabilities[] - iterate over all found vulnerabilities
+          # select(.Severity == "CRITICAL" or .Severity == "HIGH") - filter for severity
+          JQ_FILTER='
+            ([.Results[] | select(.Vulnerabilities != null) | .Vulnerabilities[] | 
+            select(.Severity == "CRITICAL" or .Severity == "HIGH")] | length)
+          '
+
+          for REPORT in "$REPORTS_DIR"/*.json; do
+            if [ ! -f "$REPORT" ]; then
+              echo "No reports found. Exiting."
+              exit 0
+            fi
+
+            VULN_COUNT=$(jq "$JQ_FILTER" "$REPORT")
+            TOTAL_VULNERABILITIES=$((TOTAL_VULNERABILITIES + VULN_COUNT))
+
+            if [ "$VULN_COUNT" -gt 0 ]; then
+              echo "POLICY VIOLATION: Found $VULN_COUNT Critical/High vulnerabilities in $(basename $REPORT)"
+            fi
+          done
+
+          echo "--- Summary ---"
+          echo "Total Critical/High Vulnerabilities Found: $TOTAL_VULNERABILITIES"
+
+          if [ "$TOTAL_VULNERABILITIES" -gt 0 ]; then
+            echo "Policy failed: Total Critical or High vulnerabilities found: $TOTAL_VULNERABILITIES. Failing pipeline."
+            exit 1 # Non-zero exit code to fail the CI job
+          else
+            echo "Policy passed: No Critical or High vulnerabilities found."
+          fi
