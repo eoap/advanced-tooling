@@ -24,6 +24,7 @@ jobs:
       - run: cwltool --validate cwl-workflow/app-water-bodies-cloud-native.cwl
       - run: cwltool --validate cwl-workflow/app-water-body-cloud-native.cwl
       - run: cwltool --validate cwl-workflow/app-water-body.cwl
+      - run: cwltool --validate cwl-workflow/app-water-bodies-cloud-native-geoparquet.cwl
 
   version:
     needs: validate
