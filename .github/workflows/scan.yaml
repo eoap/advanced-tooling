@@ -16,9 +16,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install ORAS
+      - name: Install oras
         run: |
-          curl -sSfL https://oras.land/install.sh | sh
+          ORAS_VERSION="1.2.2"
+          curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" | tar -xz oras
           sudo mv oras /usr/local/bin/
 
       - name: Install jq
