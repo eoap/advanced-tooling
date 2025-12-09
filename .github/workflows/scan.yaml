@@ -3,7 +3,7 @@ name: Daily SBOM Scan
 on:
   schedule:
     # run at 12:23 PM UTC daily
-    - cron: "23 12 * * *"     # Every day at 12:23 UTC
+    - cron: "29 13 * * *"     # Every day at 12:23 UTC
 
 jobs:
   scan:
