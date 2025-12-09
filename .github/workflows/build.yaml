@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        step: [crop, norm_diff, otsu, stac, stage]
+        step: [crop, norm_diff, otsu, stac, stage, stac-geoparquet]
     steps:
       - uses: actions/checkout@v2
       - run: echo version ${{ needs.version.outputs.app-version }}
@@ -81,7 +81,7 @@ jobs:
           VERSION="${{ needs.version.outputs.app-version }}"
           mkdir -p downloads sboms
 
-          for step in crop norm_diff otsu stac
+          for step in crop norm_diff otsu stac stac-geoparquet
           do
             tag="ghcr.io/eoap/advanced-tooling/${step}:${VERSION}"
             docker pull "$tag"
