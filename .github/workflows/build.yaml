@@ -3,7 +3,6 @@ name: build
 on:
   push:
     branches:
-      - feature-375
       - main
     paths:
       - 'command-line-tools/**'
