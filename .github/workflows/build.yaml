@@ -118,10 +118,10 @@ jobs:
             base=$(basename "$file" .${VERSION}.cwl)
             ref="ghcr.io/${OWNER_REPO}/${base}:${VERSION}"
 
-            echo "📦 Pushing $file as OCI artifact to $ref"
+            echo "Pushing $file as OCI artifact to $ref"
             oras push "$ref" --artifact-type application/cwl "$file":application/cwl
 
-            echo "🔍 Extracting image references from $file"
+            echo "Extracting image references from $file"
             images=$(yq e '
               .["$graph"][] 
               | select(.class == "CommandLineTool") 
@@ -133,10 +133,10 @@ jobs:
               safe_name=$(echo "$image" | tr '/@:' '___')
               sbom_file="sboms/$safe_name.sbom.spdx.json"
 
-              echo "🛠 Generating SBOM for $image"
+              echo "Generating SBOM for $image"
               syft "$image" -o spdx-json > "$sbom_file"
 
-              echo "📎 Attaching SBOM for $image to $ref"
+              echo "Attaching SBOM for $image to $ref"
               oras attach "$ref" --artifact-type application/spdx+json "$sbom_file"
             done
           done

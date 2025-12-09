@@ -1,13 +1,10 @@
 name: Daily SBOM Scan
 
 on:
-#   schedule:
-#     # run at 12:23 PM UTC daily
-#     - cron: "23 12 * * *"     # Every day at 12:23 UTC
-  push:
-    branches:
-      - develop
-      - main
+  schedule:
+    # run at 12:23 PM UTC daily
+    - cron: "23 12 * * *"     # Every day at 12:23 UTC
+
 jobs:
   scan:
     runs-on: ubuntu-latest
@@ -33,7 +30,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          REF="ghcr.io/eoap/advanced-tooling/app-water-body-cloud-native:0.1.0"
+          REF="ghcr.io/eoap/advanced-tooling/app-water-bodies-cloud-native-geoparquet:0.1.0"
           SBOM_BASE_DIR="attached-sboms"
           mkdir -p "$SBOM_BASE_DIR"
 

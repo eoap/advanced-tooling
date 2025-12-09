@@ -93,5 +93,5 @@ tasks:
         else
           echo "No SBOM found for $digest"
         fi
-        rm -rf "$OUTDIR"
+        #rm -rf "$OUTDIR"
       done
