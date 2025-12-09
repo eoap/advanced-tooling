@@ -47,7 +47,8 @@ jobs:
 
           for digest in $DIGESTS; do
             OUTDIR="$SBOM_BASE_DIR/$digest"
-            REPORT_FILE="$REPORTS_DIR/${digest}.json"
+            SAFE_DIGEST=$(echo "$digest" | tr ':' '-')
+            REPORT_FILE="$REPORTS_DIR/${SAFE_DIGEST}.json"
             echo "Pulling $digest → $OUTDIR"
             oras pull "$REF@$digest" -o "$OUTDIR"
 
