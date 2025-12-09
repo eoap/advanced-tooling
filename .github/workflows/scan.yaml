@@ -107,3 +107,11 @@ jobs:
           else
             echo "Policy passed: No Critical or High vulnerabilities found."
           fi
+
+      - name: Upload Trivy Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-sbom-reports-${{ github.run_id }}
+          path: trivy-reports/*.json
+          retention-days: 7 
+          if-no-files-found: ignore    
