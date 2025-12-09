@@ -1,3 +1,4 @@
 rbac.yaml
 .task
 *.parquet
+.env
