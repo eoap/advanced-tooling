@@ -2,8 +2,8 @@ name: Daily SBOM Scan
 
 on:
   schedule:
-    # run at 12:23 PM UTC daily
-    - cron: "29 13 * * *"     # Every day at 12:23 UTC
+    # run hourly at 58 past the hour
+    - cron: "58 * * * *"
 
 jobs:
   scan:
