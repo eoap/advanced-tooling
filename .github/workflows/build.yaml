@@ -70,7 +70,7 @@ jobs:
           curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" | tar -xz oras
           sudo mv oras /usr/local/bin/
           SYFT_VERSION="1.27.1"
-          curl -sL "https://github.com/anchore/syft/releases/latest/download/syft_${SYFT_VERSION}_linux_amd64.tar.gz" | tar -xz syft
+          curl -sL "https://github.com/anchore/syft/releases/latest/download/${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_amd64.tar.gz" | tar -xz syft
           sudo mv syft /usr/local/bin/
 
       - name: Authenticate with GitHub Container Registry
