@@ -3,7 +3,7 @@ name: Daily SBOM Scan
 on:
   schedule:
     # run at 12:23 PM UTC daily
-    - cron: "23 12 * * *"     # Every day at 12:23 UTC
+    - cron: "29 13 * * *"     # Every day at 12:23 UTC
 
 jobs:
   scan:
@@ -13,23 +13,24 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install ORAS
+      - name: Install oras
         run: |
-          curl -sSfL https://oras.land/install.sh | sh
+          ORAS_VERSION="1.2.2"
+          curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" | tar -xz oras
           sudo mv oras /usr/local/bin/
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Install Trivy
-        uses: aquasecurity/setup-trivy@v0.4.1
+        uses: aquasecurity/setup-trivy@v0.2.4
 
       - name: Run SBOM scan
         shell: bash
         run: |
           set -euo pipefail
 
-          REF="ghcr.io/eoap/advanced-tooling/app-water-body-cloud-native:0.1.0"
+          REF="ghcr.io/eoap/advanced-tooling/app-water-bodies-cloud-native-geoparquet:0.1.0"
           SBOM_BASE_DIR="attached-sboms"
           mkdir -p "$SBOM_BASE_DIR"
 

@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches:
-      - feature-375
+      - develop
       - main
     paths:
       - 'command-line-tools/**'
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        step: [crop, norm_diff, otsu, stac, stage]
+        step: [crop, norm_diff, otsu, stac, stage, stac-geoparquet]
     steps:
       - uses: actions/checkout@v2
       - run: echo version ${{ needs.version.outputs.app-version }}
@@ -70,7 +70,7 @@ jobs:
           curl -sL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" | tar -xz oras
           sudo mv oras /usr/local/bin/
           SYFT_VERSION="1.27.1"
-          curl -sL "https://github.com/anchore/syft/releases/latest/download/${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_amd64.tar.gz" | tar -xz syft
+          curl -sL "https://github.com/anchore/syft/releases/download/v${SYFT_VERSION}/syft_${SYFT_VERSION}_linux_amd64.tar.gz" | tar -xz syft
           sudo mv syft /usr/local/bin/
 
       - name: Authenticate with GitHub Container Registry
@@ -81,7 +81,7 @@ jobs:
           VERSION="${{ needs.version.outputs.app-version }}"
           mkdir -p downloads sboms
 
-          for step in crop norm_diff otsu stac
+          for step in crop norm_diff otsu stac stac-geoparquet
           do
             tag="ghcr.io/eoap/advanced-tooling/${step}:${VERSION}"
             docker pull "$tag"
@@ -118,10 +118,10 @@ jobs:
             base=$(basename "$file" .${VERSION}.cwl)
             ref="ghcr.io/${OWNER_REPO}/${base}:${VERSION}"
 
-            echo "📦 Pushing $file as OCI artifact to $ref"
+            echo "Pushing $file as OCI artifact to $ref"
             oras push "$ref" --artifact-type application/cwl "$file":application/cwl
 
-            echo "🔍 Extracting image references from $file"
+            echo "Extracting image references from $file"
             images=$(yq e '
               .["$graph"][] 
               | select(.class == "CommandLineTool") 
@@ -133,10 +133,10 @@ jobs:
               safe_name=$(echo "$image" | tr '/@:' '___')
               sbom_file="sboms/$safe_name.sbom.spdx.json"
 
-              echo "🛠 Generating SBOM for $image"
+              echo "Generating SBOM for $image"
               syft "$image" -o spdx-json > "$sbom_file"
 
-              echo "📎 Attaching SBOM for $image to $ref"
+              echo "Attaching SBOM for $image to $ref"
               oras attach "$ref" --artifact-type application/spdx+json "$sbom_file"
             done
           done
