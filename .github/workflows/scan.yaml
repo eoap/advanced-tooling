@@ -1,13 +1,13 @@
 name: SBOM Scan
 
 on:
-  # schedule:
-  #   # run hourly at 58 past the hour
-  #   - cron: "58 * * * *"
-  push:
-    branches:
-      - develop
-      - main
+  schedule:
+    # run hourly at 28 past the hour
+    - cron: "28 * * * *"
+  # push:
+  #   branches:
+  #     - develop
+  #     - main
 
 jobs:
   scan:
