@@ -1,6 +1,19 @@
-FROM docker.io/library/python:3.10-slim@sha256:80619a5316afae7045a3c13371b0ee670f39bac46ea1ed35081d2bf91d6c3dbd
+FROM docker.io/library/python:3.12-slim
+# Update base OS packages and clean up
+RUN set -eux; \
+    apt-get update; \
+    apt-get upgrade -y; \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gdal-bin \
+        libgdal-dev \
+    ; \
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip install pip==25.3 setuptools==78.1.1
+# Upgrade Python packaging tools
+RUN pip install --no-cache-dir \
+    pip>=25.3 \
+    setuptools>=78.1.1
 
 RUN pip install --no-cache-dir pystac rio_stac loguru click && \
     python -c "import rio_stac"
