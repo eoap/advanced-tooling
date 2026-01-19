@@ -11,7 +11,8 @@ jobs:
     uses: eoap/eoap-cwl-release-workflow/.github/workflows/release-cwl.yml@main
     with:
       tools: '["crop","norm_diff","otsu","stac","stage","stac-geoparquet"]'
-      image-prefix: ghcr.io/eoap/advanced-tooling
+      image-prefix: eoap/advanced-tooling
+      registry: ghcr.io
       cwl-workflow-dir: cwl-workflow
       cwl-tool-dir: command-line-tools
     secrets:
