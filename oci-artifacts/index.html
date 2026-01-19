@@ -1,0 +1,755 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../in-cluster-build/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>OCI artifacts - Advanced Tooling in Earth Observation Application Packaging with CWL</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../styles/css/app.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#oci-artifact-publishing-for-cwl-workflows-with-embedded-sboms" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Advanced Tooling in Earth Observation Application Packaging with CWL" class="md-header__button md-logo" aria-label="Advanced Tooling in Earth Observation Application Packaging with CWL" data-md-component="logo">
+      
+  <img src="../imgs/icon-eoap.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Advanced Tooling in Earth Observation Application Packaging with CWL
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              OCI artifacts
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Advanced Tooling in Earth Observation Application Packaging with CWL" class="md-nav__button md-logo" aria-label="Advanced Tooling in Earth Observation Application Packaging with CWL" data-md-component="logo">
+      
+  <img src="../imgs/icon-eoap.png" alt="logo">
+
+    </a>
+    Advanced Tooling in Earth Observation Application Packaging with CWL
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCI artifacts
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCI artifacts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-oci-artifacts-for-cwl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why OCI Artifacts for CWL?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-attach-sboms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Attach SBOMs?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-does-the-ci-step-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Does the CI Step Do?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benefits-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits at a Glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scanning-the-oci-artifacts-for-vulnerabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scanning the OCI artifacts for vulnerabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../in-cluster-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    In-cluster build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-oci-artifacts-for-cwl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why OCI Artifacts for CWL?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-attach-sboms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Attach SBOMs?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-does-the-ci-step-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Does the CI Step Do?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benefits-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits at a Glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scanning-the-oci-artifacts-for-vulnerabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scanning the OCI artifacts for vulnerabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="oci-artifact-publishing-for-cwl-workflows-with-embedded-sboms">📦 OCI Artifact Publishing for CWL Workflows with Embedded SBOMs</h1>
+<h2 id="overview">Overview</h2>
+<p>The CI step, <code>publish-oci-artifact</code>, publishes a <strong>Common Workflow Language (CWL)</strong> document as an <strong>OCI artifact</strong> to GitHub Container Registry (<code>ghcr.io</code>) and <strong>attaches Software Bill of Materials (SBOMs)</strong> for each container image referenced in the workflow.</p>
+<p>This makes the CWL workflow self-describing, portable, and security-aware—without requiring direct access to the containers it uses at runtime.</p>
+<h2 id="why-oci-artifacts-for-cwl">Why OCI Artifacts for CWL?</h2>
+<p>OCI artifacts are a standardized way to publish non-container objects like Helm charts, WASM modules, or in this case, CWL documents. This lets you:</p>
+<ul>
+<li><strong>Version and tag workflows</strong> just like Docker images</li>
+<li><strong>Push to and pull from OCI-compatible registries</strong></li>
+<li><strong>Attach related metadata</strong>, such as SBOMs, licenses, or provenance attestations</li>
+<li><strong>Distribute CWL workflows securely and reproducibly</strong></li>
+</ul>
+<h2 id="why-attach-sboms">Why Attach SBOMs?</h2>
+<p>Most CWL workflows depend on container images declared via:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><span class="nt">hints</span><span class="p">:</span>
+</span><span id="__span-0-2"><span class="w">  </span><span class="nt">DockerRequirement</span><span class="p">:</span>
+</span><span id="__span-0-3"><span class="w">    </span><span class="nt">dockerPull</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/your-org/tool:1.2.3</span>
+</span></code></pre></div>
+<p>However, CWL alone doesn’t embed what is inside those containers. By generating and attaching SBOMs (via syft), we enrich the CWL artifact with security and supply chain transparency:</p>
+<ul>
+<li>
+<p>Security Scanning: SBOMs allow for vulnerability scans of container contents without downloading or executing the containers.</p>
+</li>
+<li>
+<p>Compliance Auditing: Includes details on licenses, libraries, and binaries used.</p>
+</li>
+<li>
+<p>Reproducibility: Makes the full dependency stack explicit.</p>
+</li>
+<li>
+<p>Offline Analysis: Consumers can retrieve and inspect the SBOM from the CWL OCI artifact.</p>
+</li>
+</ul>
+<h2 id="what-does-the-ci-step-do">What Does the CI Step Do?</h2>
+<p>Install oras and syft for pushing OCI artifacts and generating SBOMs.</p>
+<ul>
+<li>
+<p>Login to ghcr.io using the GITHUB_TOKEN.</p>
+</li>
+<li>
+<p>For each CWL file:</p>
+</li>
+<li>
+<p>Publish the CWL as an OCI artifact:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1">oras<span class="w"> </span>push<span class="w"> </span>ghcr.io/your-org/your-repo/your-workflow:1.2.3<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><span class="w">  </span>--artifact-type<span class="w"> </span>application/cwl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><span class="w">  </span>app-workflow.cwl:application/cwl
+</span></code></pre></div>
+<ul>
+<li>
+<p>Extract all container image references (dockerPull) from the CWL.</p>
+</li>
+<li>
+<p>For each image:</p>
+</li>
+<li>
+<p>Generate an SBOM using syft.</p>
+</li>
+<li>
+<p>Attach the SBOM to the CWL artifact:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span id="__span-2-1">oras<span class="w"> </span>attach<span class="w"> </span>ghcr.io/.../workflow:1.2.3<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><span class="w">  </span>--artifact-type<span class="w"> </span>application/spdx+json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><span class="w">  </span>sbom.spdx.json
+</span></code></pre></div>
+<h2 id="benefits-at-a-glance">Benefits at a Glance</h2>
+<table>
+<thead>
+<tr>
+<th><strong>Feature</strong></th>
+<th><strong>Benefit</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OCI artifact</strong></td>
+<td>CWL workflows are versioned, taggable, and registrable</td>
+</tr>
+<tr>
+<td><strong>SBOM attachment</strong></td>
+<td>Transparent container dependencies</td>
+</tr>
+<tr>
+<td><strong>No need for image access</strong></td>
+<td>SBOMs are stored externally, no image pull required</td>
+</tr>
+<tr>
+<td><strong>Reproducibility &amp; auditing</strong></td>
+<td>Enables end-to-end provenance and security introspection</td>
+</tr>
+<tr>
+<td><strong>CWL+OCI integration</strong></td>
+<td>Treats workflows as first-class, shareable build artifacts</td>
+</tr>
+</tbody>
+</table>
+<p>Example Artifact Tree:</p>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1">ghcr.io/org/repo/app-water-bodies-cloud-native:1.1.0
+</span><span id="__span-3-2">├──<span class="w"> </span>manifest:<span class="w"> </span>application/cwl
+</span><span id="__span-3-3">├──<span class="w"> </span>layer:<span class="w"> </span>app-water-bodies-cloud-native.cwl
+</span><span id="__span-3-4">├──<span class="w"> </span>attached:
+</span><span id="__span-3-5">│<span class="w">   </span>├──<span class="w"> </span>type:<span class="w"> </span>application/spdx+json
+</span><span id="__span-3-6">│<span class="w">   </span>├──<span class="w"> </span>name:<span class="w"> </span>ghcr.io/org/tool-a@sha256:...sbom.spdx.json
+</span><span id="__span-3-7">│<span class="w">   </span>└──<span class="w"> </span>...
+</span></code></pre></div>
+<h2 id="scanning-the-oci-artifacts-for-vulnerabilities">Scanning the OCI artifacts for vulnerabilities</h2>
+<p>Use <code>task scan</code> to inspect the Application Package OCI artifact and scan the container vulnerabilitie:</p>
+<p>This prints: </p>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1">🔍 Discovering SBOM digests for ghcr.io/eoap/advanced-tooling/app-water-body-cloud-native:0.1.0...
+</span><span id="__span-4-2">📥 Pulling sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1 → attached-sboms/sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+</span><span id="__span-4-3">✓ Pulled      sboms/ghcr.io_eoap_advanced-tooling_crop_sha256_25aa81b7a9ea49ed94a8a6f070d84039d9e5071f4bc78061f52146c7d37705a8.sbom.spdx.j. 2.74/2.74 MB 100.00%     2s
+</span><span id="__span-4-4">  └─ sha256:a6800275c9ccbbca4ea7b935f78605a1e74c5946ab668951bfd2338315161f65
+</span><span id="__span-4-5">✓ Pulled      application/vnd.oci.image.manifest.v1+json                                                                                      860/860  B 100.00%     0s
+</span><span id="__span-4-6">  └─ sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+</span><span id="__span-4-7">Pulled [registry] ghcr.io/eoap/advanced-tooling/app-water-body-cloud-native:0.1.0@sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+</span><span id="__span-4-8">Digest: sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1
+</span><span id="__span-4-9">🧪 Scanning SBOM: attached-sboms/sha256:e01b2de4387d7b20e83c13126738ab044a556497105c79b3809c388dd0d519a1/sboms/ghcr.io_eoap_advanced-tooling_crop_sha256_25aa81b7a9ea49ed94a8a6f070d84039d9e5071f4bc78061f52146c7d37705a8.sbom.spdx.json
+</span><span id="__span-4-10">2025-06-20T07:48:17+02:00       INFO    Vulnerability scanning is enabled
+</span><span id="__span-4-11">2025-06-20T07:48:17+02:00       INFO    Detected SBOM format    format=&quot;spdx-json&quot;
+</span><span id="__span-4-12">2025-06-20T07:48:17+02:00       WARN    Ignore the OS package as no OS is detected.
+</span><span id="__span-4-13">2025-06-20T07:48:17+02:00       INFO    Number of language-specific files       num=1
+</span><span id="__span-4-14">2025-06-20T07:48:17+02:00       INFO    [python-pkg] Detecting vulnerabilities...
+</span><span id="__span-4-15">
+</span><span id="__span-4-16">Python (python-pkg)
+</span><span id="__span-4-17">
+</span><span id="__span-4-18">Total: 3 (UNKNOWN: 0, LOW: 0, MEDIUM: 1, HIGH: 2, CRITICAL: 0)
+</span><span id="__span-4-19">
+</span><span id="__span-4-20">...
+</span></code></pre></div>
+<h2 id="related-tools">Related Tools</h2>
+<p>oras – OCI Registry As Storage CLI</p>
+<p>syft – SBOM generation CLI</p>
+<p>OCI Artifact Spec – open standard for publishing non-container objects</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://img.shields.io/badge/License-CC_BY--SA_4.0-lightgrey.svg">License CC BY-SA 4.0</a>, by <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
