@@ -1,9 +1,9 @@
 name: SBOM Scan
 
 on:
-  schedule:
+  schedule: []
     # run hourly at 28 past the hour
-    - cron: "28 * * * *"
+    #- cron: "28 * * * *"
   # push:
   #   branches:
   #     - develop
