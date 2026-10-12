@@ -1,0 +1,32 @@
+{
+  "source_commit": "0763fd58ecedbb12e44328b688442d8876d76535",
+  "cluster": "eoap-mastering-app-package-docker",
+  "namespace": "zarr-cloud-native-format",
+  "processing_runtime_user": 2000,
+  "published_candidate_acceptance_passed": false,
+  "unit_tests_passed": 7,
+  "hatch_profiles_passed": 6,
+  "runtime_jobs_passed": 6,
+  "real_http_staging_sha256_matches": 2,
+  "scientific_verification": {
+    "source_acquisition": "S2A_MSIL2A_20210618T184921_R113_T10TFK_20210619T045630",
+    "shape": [
+      7205,
+      5460
+    ],
+    "crs": "EPSG:32610",
+    "ndwi_all_pixels_equal": true,
+    "otsu_all_pixels_equal": true,
+    "binary_zero_valid": true,
+    "stac_datetime_preserved": true,
+    "bbox": [
+      -121.39905410179915,
+      39.82336095080462,
+      -120.73995321724426,
+      40.482798837728375
+    ],
+    "geoparquet_semantics": "source acquisition index, not computed masks"
+  },
+  "evidence_directory": "/calrissian/advanced-rocky-0763fd5",
+  "full_notebook_acceptance_passed": false
+}
