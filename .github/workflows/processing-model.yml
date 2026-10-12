@@ -1,0 +1,31 @@
+name: Processing model acceptance
+on:
+  push:
+    branches: ['feature/**']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  processing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        step: [crop, norm_diff, otsu, stac, stac-geoparquet, stage]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v6
+      - name: Install the locked leaf environment
+        run: uv pip install --system --require-hashes -r command-line-tools/${{ matrix.step }}/requirements/development.txt
+      - name: Check fresh Hatch environments
+        working-directory: command-line-tools/${{ matrix.step }}
+        run: |
+          hatch run dev:check
+          hatch run test:test
+      - name: Build and check the processing runtime
+        run: |
+          docker build -t advanced-processing:test command-line-tools/${{ matrix.step }}
+          docker run --rm advanced-processing:test
+          docker run --rm advanced-processing:test python -c 'import importlib.util,os; assert os.getuid()==os.getgid()==2000; assert importlib.util.find_spec("pip") is None'

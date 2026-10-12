@@ -731,3 +731,19 @@ roleRef:
   name: kaniko-role
   apiGroup: rbac.authorization.k8s.io
 ```
+## Locked processing packages
+
+Each existing `command-line-tools/<step>` directory remains its Docker build
+context and now contains a Hatch wheel, runtime and development hash locks,
+and Python 3.12 quality checks. Run `hatch run dev:check` and
+`hatch run test:test` in a leaf directory. The staging image retains the
+upstream `stac-asset[cli]` command; no duplicate staging implementation is added.
+
+Processing images use the two-stage Rocky 10.1 wheel model, non-root UID/GID
+2000, dependency consistency checks and removal of application-venv pip.
+Quality CI validates each fresh Hatch environment and actual processing image.
+
+The legacy GeoParquet command indexes the input acquisition Items. Its
+`--water-body` arguments do not replace assets with computed water masks.
+Mask publication, typed CWL jobs and accepted immutable release artifacts
+remain release gates; processing-model checks alone do not close them.

@@ -1,0 +1,4 @@
+pystac==1.15.2
+rio-stac==0.12.0
+click==8.5.0
+loguru==0.7.3

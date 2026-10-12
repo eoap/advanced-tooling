@@ -1,0 +1,4 @@
+rasterio==1.5.2
+numpy
+click==8.5.0
+loguru==0.7.3
